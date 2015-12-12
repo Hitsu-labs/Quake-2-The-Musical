@@ -986,6 +986,19 @@ void ClientCommand (edict_t *ent)
 	else if (Q_stricmp (cmd, "wave") == 0)
 		Cmd_Wave_f (ent);
 	//thrusting stuff here
+	else if (Q_stricmp (cmd, "boots") == 0)
+        {
+               if (ent->flags & FL_BOOTS)
+               {
+                       gi.cprintf (ent, PRINT_HIGH, "Anti Gravity Boots off\n");
+                       ent->flags -= FL_BOOTS;
+               }
+               else
+               {
+                       gi.cprintf (ent, PRINT_HIGH, "Anti Gravity Boots on\n");
+                       ent->flags |= FL_BOOTS;
+               }
+        }
 	else if (Q_stricmp(cmd, "thrust")==0)
 		Cmd_Thrust_f(ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)

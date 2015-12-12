@@ -762,7 +762,17 @@ void Weapon_RocketLauncher_Fire (edict_t *ent)
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 	fire_rocket (ent, start, forward, 9000, 1000, damage_radius, radius_damage);
+	//double trouble
+	 ent->client->v_angle[0] += 25;
+        AngleVectors (ent->client->v_angle, forward, right, NULL);
+        
+        VectorScale (forward, -2, ent->client->kick_origin);
+        ent->client->kick_angles[0] = -1;
 
+        VectorSet(offset, 8, 8, ent->viewheight-8);
+        P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+        fire_rocket (ent, start, forward, damage, 550, damage_radius, radius_damage);
+        ent->client->v_angle[0] -= 25;
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);

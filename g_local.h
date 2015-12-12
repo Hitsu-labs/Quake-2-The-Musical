@@ -49,7 +49,7 @@
 #define FL_NO_KNOCKBACK			0x00000800
 #define FL_POWER_ARMOR			0x00001000	// power armor (if any) is active
 #define FL_RESPAWN				0x80000000	// used for item respawning
-
+#define FL_BOOTS				0x00002000
 
 #define	FRAMETIME		0.1
 
@@ -938,7 +938,9 @@ struct gclient_s
 	int			flood_whenhead;		// head pointer for when said
 
 	float		respawn_time;		// can respawn when time > this
-
+	//jetpack stuff here
+	qboolean	thrusting;
+	float		next_thrust_sound;
 	edict_t		*chase_target;		// player we are chasing
 	qboolean	update_chase;		// need to update chase info?
 };
