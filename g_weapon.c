@@ -463,6 +463,36 @@ static void Grenade_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurfa
 	ent->enemy = other;
 	Grenade_Explode (ent);
 }
+static void proxim_think(edict_t *ent){
+	edict_t *blip = NULL;
+
+	if (level.time > ent->delay)
+	{
+		Grenade_Explode(ent);
+		return;
+	}
+	
+	ent->think = proxim_think;
+	while ((blip = findradius(blip, ent->s.origin, 100)) != NULL)
+	{
+		if (!(blip->svflags & SVF_MONSTER) && !blip->client)
+			continue;
+		if (blip == ent->owner)
+			continue;
+		if (!blip->takedamage)
+			continue;
+		if (blip->health <= 0)
+			continue;
+		if (!visible(ent, blip))
+			continue;
+		ent->think = Grenade_Explode;
+		break;
+	}
+
+	ent->nextthink = level.time + .1;
+
+
+}
 
 void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
 {
@@ -488,8 +518,12 @@ void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int s
 	grenade->s.modelindex = gi.modelindex ("models/objects/grenade/tris.md2");
 	grenade->owner = self;
 	grenade->touch = Grenade_Touch;
-	grenade->nextthink = level.time + timer;
-	grenade->think = Grenade_Explode;
+	//grenade->nextthink = level.time + timer;
+	//grenade->think = Grenade_Explode;
+	grenade->nextthink = level.time + .1;
+	grenade->think = proxim_think;
+	grenade->delay = level.time + 60;
+
 	grenade->dmg = damage;
 	grenade->dmg_radius = damage_radius;
 	grenade->classname = "grenade";
@@ -521,8 +555,11 @@ void fire_grenade2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int 
 	grenade->s.modelindex = gi.modelindex ("models/objects/grenade2/tris.md2");
 	grenade->owner = self;
 	grenade->touch = Grenade_Touch;
-	grenade->nextthink = level.time + timer;
-	grenade->think = Grenade_Explode;
+	//grenade->nextthink = level.time + timer;
+	//grenade->think = Grenade_Explode;
+	grenade->nextthink = level.time + .1;
+	grenade->think = proxim_think;
+	grenade->delay = level.time + 60;
 	grenade->dmg = damage;
 	grenade->dmg_radius = damage_radius;
 	grenade->classname = "hgrenade";
@@ -603,10 +640,11 @@ void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed
 	edict_t	*rocket;
 
 	rocket = G_Spawn();
+
 	VectorCopy (start, rocket->s.origin);
 	VectorCopy (dir, rocket->movedir);
 	vectoangles (dir, rocket->s.angles);
-	VectorScale (dir, speed, rocket->velocity);
+	VectorScale (dir, 999, rocket->velocity);
 	rocket->movetype = MOVETYPE_FLYMISSILE;
 	rocket->clipmask = MASK_SHOT;
 	rocket->solid = SOLID_BBOX;
@@ -621,7 +659,8 @@ void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed
 	rocket->dmg = damage;
 	rocket->radius_dmg = radius_damage;
 	rocket->dmg_radius = damage_radius;
-	rocket->s.sound = gi.soundindex ("weapons/rockfly.wav");
+	//rocket->s.sound = gi.soundindex ("weapons/rockfly.wav");
+	rocket->s.sound=gi.soundindex("weapons/cenamono.wav");
 	rocket->classname = "rocket";
 
 	if (self->client)

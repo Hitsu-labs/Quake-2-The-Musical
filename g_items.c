@@ -540,6 +540,8 @@ qboolean Pickup_Health (edict_t *ent, edict_t *other)
 		if (other->health >= other->max_health)
 			return false;
 
+
+
 	other->health += ent->count;
 
 	if (!(ent->style & HEALTH_IGNORE_MAX))
@@ -651,7 +653,7 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 
 			// if we're already maxed out then we don't need the new armor
 			if (other->client->pers.inventory[old_armor_index] >= newcount)
-				return false;
+				//return false;
 
 			// update current armor value
 			other->client->pers.inventory[old_armor_index] = newcount;

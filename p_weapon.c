@@ -520,9 +520,9 @@ GRENADE
 ======================================================================
 */
 
-#define GRENADE_TIMER		3.0
-#define GRENADE_MINSPEED	400
-#define GRENADE_MAXSPEED	800
+#define GRENADE_TIMER		1.0
+#define GRENADE_MINSPEED	4000
+#define GRENADE_MAXSPEED	8000
 
 void weapon_grenade_fire (edict_t *ent, qboolean held)
 {
@@ -761,7 +761,7 @@ void Weapon_RocketLauncher_Fire (edict_t *ent)
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 650, damage_radius, radius_damage);
+	fire_rocket (ent, start, forward, 9000, 1000, damage_radius, radius_damage);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
@@ -852,6 +852,7 @@ void Weapon_HyperBlaster_Fire (edict_t *ent)
 	vec3_t	offset;
 	int		effect;
 	int		damage;
+	vec3_t tempvec;
 
 	ent->client->weapon_sound = gi.soundindex("weapons/hyprbl1a.wav");
 
