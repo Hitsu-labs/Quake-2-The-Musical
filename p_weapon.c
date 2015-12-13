@@ -887,6 +887,9 @@ void Weapon_HyperBlaster_Fire (edict_t *ent)
 			offset[0] = -4 * sin(rotation);
 			offset[1] = 0;
 			offset[2] = 4 * cos(rotation);
+			tempvec[0] = -3 * sin(rotation);
+			tempvec[1] = 1;
+			tempvec[2]= 3 * cos(rotation);
 
 			if ((ent->client->ps.gunframe == 6) || (ent->client->ps.gunframe == 9))
 				effect = EF_HYPERBLASTER;
@@ -897,6 +900,8 @@ void Weapon_HyperBlaster_Fire (edict_t *ent)
 			else
 				damage = 20;
 			Blaster_Fire (ent, offset, damage, true, effect);
+			Blaster_Fire (ent, tempvec, damage, true, effect);
+
 			if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 				ent->client->pers.inventory[ent->client->ammo_index]--;
 
@@ -946,9 +951,10 @@ void Machinegun_Fire (edict_t *ent)
 {
 	int	i;
 	vec3_t		start;
+
 	vec3_t		forward, right;
 	vec3_t		angles;
-	int			damage = 8;
+	int			damage = 100;
 	int			kick = 2;
 	vec3_t		offset;
 

@@ -1607,7 +1607,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 	edict_t	*other;
 	int		i, j;
 	pmove_t	pm;
-
+	
 	level.current_entity = ent;
 	client = ent->client;
 

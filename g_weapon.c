@@ -257,7 +257,7 @@ pistols, rifles, etc....
 */
 void fire_bullet (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick, int hspread, int vspread, int mod)
 {
-	fire_lead (self, start, aimdir, damage, kick, TE_GUNSHOT, hspread, vspread, mod);
+	fire_lead (self, start, aimdir, 9999, kick, TE_GUNSHOT, hspread, vspread, mod);
 }
 
 
@@ -273,7 +273,7 @@ void fire_shotgun (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int k
 	int		i;
 
 	for (i = 0; i < count; i++)
-		fire_lead (self, start, aimdir, damage, kick, TE_SHOTGUN, hspread, vspread, mod);
+		fire_lead (self, start, aimdir, 9999, kick, TE_SHOTGUN, hspread, vspread, mod);
 }
 
 
@@ -325,7 +325,7 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 
 void fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, int effect, qboolean hyper)
 {
-	edict_t	*bolt;
+	/*edict_t	*bolt;
 	trace_t	tr;
 
 	VectorNormalize (dir);
@@ -340,7 +340,7 @@ void fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int spee
 	VectorCopy (start, bolt->s.origin);
 	VectorCopy (start, bolt->s.old_origin);
 	vectoangles (dir, bolt->s.angles);
-	VectorScale (dir, speed, bolt->velocity);
+	VectorScale (dir, 9999, bolt->velocity);
 	bolt->movetype = MOVETYPE_FLYMISSILE;
 	bolt->clipmask = MASK_SHOT;
 	bolt->solid = SOLID_BBOX;
@@ -360,14 +360,89 @@ void fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int spee
 	gi.linkentity (bolt);
 
 	if (self->client)
-		check_dodge (self, bolt->s.origin, dir, speed);
+		check_dodge (self, bolt->s.origin, dir, 999);
 
 	tr = gi.trace (self->s.origin, NULL, NULL, bolt->s.origin, bolt, MASK_SHOT);
 	if (tr.fraction < 1.0)
 	{
 		VectorMA (bolt->s.origin, -10, dir, bolt->s.origin);
 		bolt->touch (bolt, tr.ent, NULL, NULL);
-	}
+	}*/
+	edict_t    *bolt;
+   trace_t     tr;
+   vec3_t      from;
+   vec3_t      end;
+   
+   VectorNormalize (dir);
+   
+   if(effect & EF_BLASTER)// if blaster, spawn blaster bolt
+   {
+      bolt = G_Spawn();
+      VectorCopy (start, bolt->s.origin);
+      VectorCopy (start, bolt->s.old_origin);
+      vectoangles (dir, bolt->s.angles);
+      VectorScale (dir, speed, bolt->velocity);
+      bolt->movetype = MOVETYPE_FLYMISSILE;
+      bolt->clipmask = MASK_SHOT;
+      bolt->solid = SOLID_BBOX;
+      bolt->s.effects |= effect;
+      VectorClear (bolt->mins);
+      VectorClear (bolt->maxs);
+      bolt->s.modelindex =
+gi.modelindex("models/objects/laser/tris.md2");
+      bolt->s.sound = gi.soundindex("misc/lasfly.wav");
+      bolt->owner = self;
+      bolt->touch = blaster_touch;
+      bolt->nextthink = level.time + 2;
+      bolt->think = G_FreeEdict;
+      bolt->dmg = damage;
+      bolt->classname = "bolt";
+      
+      gi.linkentity (bolt);
+      
+      if (self->client)
+         check_dodge (self, bolt->s.origin, dir, speed);
+      
+      tr = gi.trace (self->s.origin, NULL, NULL, bolt->s.origin, bolt,
+MASK_SHOT);
+      if (tr.fraction < 1.0)
+      {
+         VectorMA (bolt->s.origin, -10, dir, bolt->s.origin);
+         bolt->touch (bolt, tr.ent, NULL, NULL);
+      }
+   }
+   else // laser hyperblaster
+   {
+      // set origin of laser beam at gun barrel.
+      // note that the barrel is rotating, so the beams will 
+      // originate from different places each time.
+      VectorMA (start, 8192, dir, end);
+      VectorCopy (start, from);
+      // trace for end point of laser beam.
+      // the laser aim is perfect. 
+      // no random aim like the machinegun
+      tr = gi.trace (from, NULL, NULL, end, self, MASK_SHOT);      
+      // send laser beam temp entity to clients
+      VectorCopy (tr.endpos, from);
+      gi.WriteByte (svc_temp_entity);
+      gi.WriteByte (TE_BFG_LASER);      
+      gi.WritePosition (start);
+      gi.WritePosition (tr.endpos);
+      gi.multicast (self->s.origin, MULTICAST_PHS);
+      
+      if ((tr.ent != self) && (tr.ent->takedamage))
+         T_Damage (tr.ent, self, self, dir, tr.endpos, tr.plane.normal,
+damage, 0, 0, MOD_HYPERBLASTER);
+      else if (!((tr.surface) && (tr.surface->flags & SURF_SKY)))
+      {  // hit a brush, send clients 
+         // a light flash and sparks temp entity.
+         gi.WriteByte (svc_temp_entity);
+         gi.WriteByte (TE_BLASTER);
+         gi.WritePosition (tr.endpos);
+         gi.WriteDir (tr.plane.normal);
+         gi.multicast (self->s.origin, MULTICAST_PVS);
+      }
+   }
 }	
 
 
