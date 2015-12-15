@@ -2,11 +2,11 @@
 
 #include "g_local.h"
 #include "m_player.h"
+//#include "game.h"
 
 
 static qboolean	is_quad;
 static byte		is_silenced;
-
 
 void weapon_grenade_fire (edict_t *ent, qboolean held);
 
@@ -23,6 +23,33 @@ static void P_ProjectSource (gclient_t *client, vec3_t point, vec3_t distance, v
 	G_ProjectSource (point, _distance, forward, right, result);
 }
 
+static void item_spawn(edict_t* ent, char* itemclassname)
+{
+	gitem_t *item;
+	edict_t *entit;
+	vec3_t   angles;
+
+	item=FindItemByClassname(itemclassname);
+	if(!item)
+		return;
+	entit=G_Spawn();
+	entit->item=item;
+	VectorCopy(ent->s.origin,entit->s.origin);
+	entit->s.origin[2]+=20;
+	VectorSet(entit->mins,-20,-20,-20);
+	VectorSet(entit->maxs,-20,-20,-20);
+	entit->solid = SOLID_TRIGGER;
+	entit->touch= Touch_Item;
+	gi.setmodel(entit,entit->item->world_model);
+	entit->s.effects = entit->item->world_model_flags;
+	entit->s.renderfx=RF_GLOW;
+	gi.linkentity(entit);
+	G_FreeEdict(ent);
+
+
+
+
+}
 
 /*
 ===============
@@ -843,8 +870,10 @@ void Weapon_Blaster_Fire (edict_t *ent)
 		damage = 15;
 	else
 		damage = 10;
-	Blaster_Fire (ent, vec3_origin, damage, false, EF_BLASTER);
+	//Blaster_Fire (ent, vec3_origin, damage, false, EF_BLASTER);
+	Blaster_Fire(ent,vec3_origin,999,true,EF_HYPERBLASTER);
 	ent->client->ps.gunframe++;
+	
 }
 
 void Weapon_Blaster (edict_t *ent)
@@ -928,6 +957,7 @@ void Weapon_HyperBlaster_Fire (edict_t *ent)
 		gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/hyprbd1a.wav"), 1, ATTN_NORM, 0);
 		ent->client->weapon_sound = 0;
 	}
+	weapon_grenade_fire (ent, false);
 
 }
 
@@ -1010,7 +1040,7 @@ void Machinegun_Fire (edict_t *ent)
 	VectorSet(offset, 0, 8, ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 	fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_MACHINEGUN);
-
+	fire_rocket (ent, start, forward, damage, 550, 999, 5);
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
 	gi.WriteByte (MZ_MACHINEGUN | is_silenced);
@@ -1171,6 +1201,7 @@ void Weapon_Chaingun (edict_t *ent)
 }
 
 
+
 /*
 ======================================================================
 
@@ -1186,7 +1217,12 @@ void weapon_shotgun_fire (edict_t *ent)
 	vec3_t		offset;
 	int			damage = 4;
 	int			kick = 8;
-
+	gitem_t     *item;
+	edict_t		*actual_item;
+	//item=FindItem("Power Shield");
+	//VectorCopy(start,ent->s.origin);
+	//SpawnItem (ent, item);
+	item_spawn(ent,"item_power_shield");
 	if (ent->client->ps.gunframe == 9)
 	{
 		ent->client->ps.gunframe++;
@@ -1200,6 +1236,8 @@ void weapon_shotgun_fire (edict_t *ent)
 
 	VectorSet(offset, 0, 8,  ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+
+	//item_spawn(actual_item, "item_power_shield");
 
 	if (is_quad)
 	{
@@ -1242,7 +1280,7 @@ void weapon_supershotgun_fire (edict_t *ent)
 	vec3_t		v;
 	int			damage = 6;
 	int			kick = 12;
-
+	item_spawn(ent,"item_quad");
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 
 	VectorScale (forward, -2, ent->client->kick_origin);

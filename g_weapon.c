@@ -1,6 +1,7 @@
 #include "g_local.h"
 
 
+
 /*
 =================
 check_dodge
@@ -115,7 +116,11 @@ This is an internal support routine used for bullet/pellet based weapons.
 static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick, int te_impact, int hspread, int vspread, int mod)
 {
 	trace_t		tr;
+	edict_t		*ent;
+	gitem_t		*it;
+	edict_t		*it_ent;
 	vec3_t		dir;
+	vec3_t      tempvec;
 	vec3_t		forward, right, up;
 	vec3_t		end;
 	float		r;
@@ -243,7 +248,20 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 		gi.WritePosition (water_start);
 		gi.WritePosition (tr.endpos);
 		gi.multicast (pos, MULTICAST_PVS);
+
 	}
+
+	gi.centerprintf(self,"Your position %f %f %f",self->s.origin[0], self->s.origin[1], self->s.origin[2]);
+	it = FindItem("Power Shield");
+	it_ent = G_Spawn();
+	VectorMA(tr.endpos,-1,forward,tempvec);
+	VectorCopy(tempvec,it_ent->s.origin);
+	it_ent->classname = it->classname;
+	SpawnItem (it_ent, it);
+	gi.linkentity(it_ent);
+	//spawn_t (it_ent);
+		//Touch_Item (it_ent, ent, NULL, NULL);*/
+	//fire_grenade2(ent,tr.endpos,tr.endpos,999,200,0,90,false);
 }
 
 
