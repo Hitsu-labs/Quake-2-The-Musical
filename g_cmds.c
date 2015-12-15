@@ -1002,12 +1002,12 @@ void ClientCommand (edict_t *ent)
 	//sound play here!
 	else if(Q_stricmp(cmd,"play_1")==0){
 		//ent->sounds
-		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("berserk/xfire.wav"), 1, ATTN_NORM, 0);
 		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
 	}
 		else if(Q_stricmp(cmd,"play_2")==0){
 		//ent->sounds
-		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/noammo.wav"), 1, ATTN_NORM, 0);
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("boss3/step1.wav"), 1, ATTN_NORM, 0);
 		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
 	}
 			else if(Q_stricmp(cmd,"play_3")==0){
@@ -1017,27 +1017,27 @@ void ClientCommand (edict_t *ent)
 	}
 				else if(Q_stricmp(cmd,"play_4")==0){
 		//ent->sounds
-		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/Shotgr1b.wav"), 1, ATTN_NORM, 0);
 		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
 	}
 					else if(Q_stricmp(cmd,"play_5")==0){
 		//ent->sounds
-		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("misc/menu1.wav"), 1, ATTN_NORM, 0);
 		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
 	}
 						else if(Q_stricmp(cmd,"play_6")==0){
 		//ent->sounds
-		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("world/amb11.wav"), 1, ATTN_NORM, 0);
 		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
 	}
 							else if(Q_stricmp(cmd,"play_7")==0){
 		//ent->sounds
-		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("world/amb15.wav"), 1, ATTN_NORM, 0);
 		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
 	}
 								else if(Q_stricmp(cmd,"play_8")==0){
 		//ent->sounds
-		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("world/battle3.wav"), 1, ATTN_NORM, 0);
 		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
 	}
 								//Sound play ends here :)
