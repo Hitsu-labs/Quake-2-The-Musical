@@ -999,6 +999,49 @@ void ClientCommand (edict_t *ent)
                        ent->flags |= FL_BOOTS;
                }
         }
+	//sound play here!
+	else if(Q_stricmp(cmd,"play_1")==0){
+		//ent->sounds
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
+	}
+		else if(Q_stricmp(cmd,"play_2")==0){
+		//ent->sounds
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/noammo.wav"), 1, ATTN_NORM, 0);
+		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
+	}
+			else if(Q_stricmp(cmd,"play_3")==0){
+		//ent->sounds
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/Shotgf1b.wav"), 1, ATTN_NORM, 0);
+		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
+	}
+				else if(Q_stricmp(cmd,"play_4")==0){
+		//ent->sounds
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
+	}
+					else if(Q_stricmp(cmd,"play_5")==0){
+		//ent->sounds
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
+	}
+						else if(Q_stricmp(cmd,"play_6")==0){
+		//ent->sounds
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
+	}
+							else if(Q_stricmp(cmd,"play_7")==0){
+		//ent->sounds
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
+	}
+								else if(Q_stricmp(cmd,"play_8")==0){
+		//ent->sounds
+		gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		gi.cprintf(ent, PRINT_HIGH,"Playing sound one!");
+	}
+								//Sound play ends here :)
+	
 	else if (Q_stricmp(cmd, "thrust")==0)
 		Cmd_Thrust_f(ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
